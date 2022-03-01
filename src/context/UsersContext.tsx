@@ -1,3 +1,4 @@
+import axios from "axios";
 import {
   ReactNode,
   createContext,
@@ -8,6 +9,7 @@ import {
 
 interface UsersContextData {
   users: User[];
+  updateUsers: (data: User[]) => void;
   removeUser: (userId: number) => void;
 }
 
@@ -29,10 +31,22 @@ export function UsersProvider({ children }: ModalProviderProps) {
 
   async function removeUser(userId: number) {
     // REMOVER USUÁRIO
+    const response = await axios.delete(
+      `http://localhost:3333/users/${userId}`
+    );
+
+    const removeUser = users.filter((user) => user.id !== userId);
+    setUsers(removeUser);
   }
 
   async function getUsers() {
     // BUSCAR OS USUÁRIOS NA API COM AXIOS
+    const response = await axios.get("http://localhost:3333/users");
+    setUsers(response.data);
+  }
+
+  function updateUsers(data: User[]) {
+    setUsers(data);
   }
 
   useEffect(() => {
@@ -40,7 +54,7 @@ export function UsersProvider({ children }: ModalProviderProps) {
   }, []);
 
   return (
-    <UsersContext.Provider value={{ users, removeUser }}>
+    <UsersContext.Provider value={{ users, removeUser, updateUsers }}>
       {children}
     </UsersContext.Provider>
   );

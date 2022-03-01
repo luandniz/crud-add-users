@@ -7,7 +7,7 @@ import styles from "./styles.module.scss";
 
 export const ListUsers = () => {
   const { openModal } = useModal();
-  const { users } = useUsers();
+  const { users, removeUser } = useUsers();
 
   return (
     <>
@@ -30,7 +30,10 @@ export const ListUsers = () => {
                 className={styles.editIcon}
                 onClick={() => openModal("insira as alterações", "edit", user)}
               />
-              <RiDeleteBinLine className={styles.editIcon} />
+              <RiDeleteBinLine
+                className={styles.editIcon}
+                onClick={() => removeUser(user.id)}
+              />
             </div>
           </div>
         ))}
